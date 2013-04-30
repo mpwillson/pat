@@ -1,6 +1,6 @@
 # pat
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to provide Patient Waiting Time Simulation
 
 ## Usage
 
