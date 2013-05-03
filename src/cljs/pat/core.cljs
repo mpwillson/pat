@@ -12,7 +12,8 @@
     (.clearRect ctx 0 0 width height)
     (.fillRect ctx 0 0 width height)
     (set! (.-fillStyle ctx) "#000000")
-    (.fillText ctx "Hello, (idiot) World!" 100 100)
+    (doseq [x (range 0 width 20) y (range 0 height 20)]
+      (.fillText ctx "+" x y))
     (js/alert (str "<p>" colour "</p>"))))
 
 (.write js/document "<p>Hello, clojurescript world!</p>")
