@@ -1,16 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><title>Patient Waiting Time Simulation</title></head>
-  <body>
-    <h1>Testing...</h1>
-    <div style="width: 1000px;height: 900px;overflow: auto">
-    <canvas id="myCanvas" width="1500" height="1000"
-        style="border:1px solid #000000;">
+  <head>
+    <script type="text/javascript" src="pat.js"></script>
+    <title>Patient Waiting Time Simulation</title>
+  </head>
+  <body onload="pat.setup()">
+    <h1>Parameters</h1>
+    <table cellspacing="0" cellpadding="0" bgcolor="grey">
+      <tr>
+        <td># Periods:</td>
+        <td><input type="text" id="nperiods" size="10" maxlength="80"/></td>
+        <td>Max. Slots/Period</td>
+        <td><input type="text" id="nslots" size="10" maxlength="80"/></td>
+      </tr>
+      <tr>
+        <td># Referrals:</td>
+        <td><input type="text" id="nreferrals" size="10" maxlength="80"/></td>
+        <td>Av. Slots:</td>
+        <td><input type="text" id="navslots" size="10" maxlength="80"/></td>
+      </tr>
+      <tr>
+        <td># Patient Queued:</td>
+        <td><input type="text" id="nqueued" size="10" maxlength="80"/></td>
+        <td>Breach Threshold:</td>
+        <td><input type="text" id="sla" size="10" maxlength="80"/></td>
+      </tr>
+    </table>
+    Uniform: <input type="radio" name="distribution" id="uniform" value="1"
+    checked="checked"/>
+    Normal: <input type="radio" name="distribution" id="normal" value="0"/>
+    Status: <input type="text" id="status" size="80" maxlength="80"/>
+    <div style="width: 1250px;height: 700px;overflow: auto">
+    <canvas id="patCanvas" width="1200" height="650"
+        style="border:1px solid #000000;" onclick="gui.mouse_click(event)">
     </canvas>
     </div>
-    <input type="button" value="Press Me" onclick="gui.draw_graph()"/>
-    <input type="text" name="colour" id="colour" size="32" maxlength="80"/>
-    <script type="text/javascript" src="pat.js"></script>
+    <input type="button" value="Show Slots" onclick="pat.set_slots(false)"/>
+    <input type="button" value="Reset Slots" onclick="pat.set_slots(true)"/>
+    <input type="button" value="Run" onclick="pat.start()"/>
+    <input type="button" value="Clear" onclick="gui.clear()"/>
+    <table cellspacing="0" cellpadding="0" bgcolor="grey">
+      <tr>
+        <td>Total # patients breached:</td>
+        <td><input type="text" id="nbreached" size="10" maxlength="80"/></td>
+      </tr>
+      <tr>
+        <td>Average queue time:</td>
+        <td><input type="text" id="avqtime" size="10" maxlength="80"/></td>
+      </tr>
+    </table>
   </body>
 </html>

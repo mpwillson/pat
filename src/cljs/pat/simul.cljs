@@ -2,7 +2,7 @@
 ;;;; simul - simple simulation of queuing for service
 ;;;;
 
-(ns pat.simul)
+(ns simul)
 
 (def span (atom (vector)))
 
