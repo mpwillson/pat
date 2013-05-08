@@ -27,6 +27,10 @@
   [result sla]
   (reduce #(rolling-average %1 %2 sla) 0 result))
 
+(defn get-empty-count
+  [lst]
+  (reduce + (for [p lst] (count (filter neg? p)))))
+
 (defn start []
   (try
       (let [nperiods (gui/get-int :nperiods)
@@ -47,10 +51,12 @@
               nbreached (apply +  (map
                                    #(count (filter (fn [e] (> e sla)) %))
                                    result))
-              avq (avqtime result sla)]
+              avq (avqtime result sla)
+              unusedslots (get-empty-count result)]
           (gui/draw-graph result)
           (gui/set-value :nbreached (str nbreached))
-          (gui/set-value :avqtime (str avq))))
+          (gui/set-value :avqtime (format "%.1f" avq))
+          (gui/set-value :unusedslots (str unusedslots))))
       (catch js/Error _
         (js/alert (str "ERROR: " _)))))
 
@@ -68,7 +74,6 @@
                          [:nslots "30"] [:sla "10"] [:navslots "22"]]]
       (gui/set-value key value))
     (gui/init-slots [[0 (gui/get-int :navslots)]])
-    (gui/set-value :status title) ; TBD improve
     (if (gui/canvas-available)
       (gui/set-mouse-refresh set-slots)
       (.write js/document "<p>I can't run in your browser!</p>")))

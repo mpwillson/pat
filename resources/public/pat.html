@@ -6,20 +6,19 @@
     <title>Patient Waiting Time Simulation</title>
     <style type="text/css">
       <!--
-          h1 {font: 12pt Verdana}
-          td {font: 9pt Verdana}
+          h1 {font: 14pt sans}
+          td {font: 9pt sans}
       -->
     </style>
   </head>
   <body onload="pat.setup()" bgcolor="#ffffff">
     <h1>Patient Waiting Time Simulation</h1>
-    <hr/>
     <table cellspacing="0" cellpadding="0">
       <tr>
         <td valign="top">
-          <table cellspacing="0" cellpadding="0" bgcolor="#EEEEEE">
+          <table cellspacing="0" cellpadding="0" bgcolor="#ffe800">
             <tr>
-              <td colspan="6">Parameters:</td>
+              <td colspan="6" style="font-weight: bold">Parameters</td>
             </tr>
             <tr>
               <td># Periods:</td>
@@ -49,53 +48,53 @@
           </table>
         </td>
         <td valign="top">
-          <table cellspacing="0" cellpadding="0" bgcolor="99DE65">
+          <table cellspacing="0" cellpadding="0" bgcolor="#14a2d4">
             <tr>
-              <td colspan="2">Results:</td>
+              <td colspan="2" style="font-weight: bold; color: white">Results</td>
             </tr>
             <tr>
-              <td >Total # patients breached:</td>
+              <td style="color: white">Total # patients breached:</td>
               <td><input type="text" id="nbreached" size="10" maxlength="80"/></td>
             </tr>
             <tr>
-              <td>Average queue time:</td>
+              <td style="color: white">Average queue time:</td>
               <td><input type="text" id="avqtime" size="10" maxlength="80"/></td>
             </tr>
             <tr>
-              <td>Total Unused Slots:</td>
+              <td style="color: white">Total Unused Slots:</td>
               <td><input type="text" id="unusedslots" size="10" maxlength="80"/></td>
             </tr>
           </table>
         </td>
         <td valign="top">
-          <table cellspacing="0" cellpadding="0" bgcolor="#dd9944">
+          <table cellspacing="0" cellpadding="0" bgcolor="#af5eac">
             <tr>
-              <td>Controls</td>
+              <td style="color: white; font-weight: bold;">Controls</td>
             </tr>
             <tr>
-              <td align="center"><input type="button" value="Show Slots" onclick="pat.set_slots(false)"/></td>
-            <td align="center"><input type="button" value="Reset Slots" onclick="pat.set_slots(true)"/></td></tr>
-            <tr><td align="center"><input type="button" value="Run" onclick="pat.start()"/></td>
-            <td align="center"><input type="button" value="Clear" onclick="gui.clear()"/></td>
-            </tr>
+              <td align="center"><input type="button" value="Show Slots" 
+              onclick="pat.set_slots(false)"/></td>
+              <td align="center"><input type="button" value="Reset Slots" 
+              onclick="pat.set_slots(true)"/></td></tr>
+              <tr><td align="center"><input type="button" value="Run" 
+              onclick="pat.start()"/></td>
+              <td align="center"><input type="button" value="Clear" 
+              onclick="gui.clear()"/></td>
+              </tr>
+              <tr><td align="center"><input type="button" value="Import" 
+              onclick=""/></td>
+              <td align="center"><input type="button" value="Export" 
+              onclick=""/></td>
+              </tr>
           </table>
         </td>
       </tr>
     </table>
-    <hr/>
+    <br/>
     <div style="width: 1250px;height: 700px;overflow: auto">
       <canvas id="patCanvas" width="1200" height="650"
               style="border:1px solid #000000;" onclick="gui.mouse_click(event)">
       </canvas>
     </div>
-    <!--Status: <input type="text" id="status" size="80" maxlength="80"/>
-        <table>
-        <tr>
-        <td><input type="button" value="Show Slots" onclick="pat.set_slots(false)"/></td>
-        <td><input type="button" value="Reset Slots" onclick="pat.set_slots(true)"/></td>
-        <td><input type="button" value="Run" onclick="pat.start()"/></td>
-        <td><input type="button" value="Clear" onclick="gui.clear()"/></td>
-        </tr>
-        </table>-->
   </body>
 </html>

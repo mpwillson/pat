@@ -8,7 +8,7 @@
 (def stride 20)
 
 ;;             green     red       blue
-(def colorvec ["#11FF33" "#FF0000" "#0000FF"])
+(def colorvec ["#88FF88" "#FF8888" "#6666FF"])
 
 (defn canvas-available 
   []
@@ -46,17 +46,15 @@
    (<= v sla) 0))
    
 ;; drawing many circles consumes much CPU time
-(defn draw-circle 
+(defn draw-symbol 
   [ctx x y radius colour]
   (set! (.-fillStyle ctx) colour)
-  (.fillRect ctx x y radius radius)
-  #_(.arc ctx x y radius 0 (* 2 (.-PI js/Math)) true)
-  #_(.fill ctx))
+  (.fillRect ctx x y radius radius))
 
 (defn draw-column [ctx n cvals ew eh stride height sla]
   (doall
    (map (fn [v y]
-          (draw-circle ctx (* (inc n) stride) y 
+          (draw-symbol ctx (* (inc n) stride) y 
                        ew (nth colorvec (colour-map v sla))))
         cvals (range (- height (* 2 stride)) 0 (* -1 stride)))))
 
@@ -133,7 +131,7 @@
         y (* stride (int (/ mouse-y stride)))]
     (handle-slots [period slots])
     (when @refresh-fn (@refresh-fn))
-    (set-value :status
+    #_(set-value :status
                (format "Period: %d set with %d slots" period slots))))
 
 (defn set-mouse-refresh [fn]
