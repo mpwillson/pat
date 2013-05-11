@@ -1,0 +1,250 @@
+<h1>Patient Waiting Time Simulation</h1>
+<h2>Introduction</h2>
+<p>
+  The <a href="/pat.html">Patient Waiting Time Simulator</a> is an
+  attempt to model the effects of patient referrals and clinic
+  appointment availability on the patient waiting time for an
+  out-patient department.  The primary focus is on showing the effect
+  on breaching the maximum waiting time permitted.
+</p>
+<p>
+  The simulator uses a queue to simulate appointments for patient
+  referrals, that is on a first-come, first-served basis.
+</p>
+<p>
+  The simulator presentation consists of four panels:
+</p>
+<ul>
+  <li>Entry of simulation parameters</li>
+  <li>Display of simulation result statistics</li>
+  <li>Control of the simulator</li>
+  <li>Graphics representation for the display of simulation results and clinic slots</li>
+</ul>
+<img src="/images/screen-shot.png" width="300" alt="screen shot">
+<h2>Simulation Parameters</h2>
+<p>
+  The parameters that can be specified are as follows:
+</p>
+<table cellspacing="3" cellborder="2" width="600" valign="top">
+  <tr>
+    <th align="left">Name</th>
+    <th align="left">Description</th>
+  </tr>
+  <tr>
+    <td valign="top"># Periods</td>
+    <td align="justify">
+      The defines the number of periods the simulation should run.
+      Periods are whatever time interval makes sense for the
+      simulation you are running; they could be hours, days, weeks...
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"># Referrals</td>
+    <td align="justify">
+      This sets the average number of referrals to the clinic every
+      period (.e.g every week).  This is used during the simulation
+      run to add new patients to the waiting list. If you change this
+      value, be sure to click on the "Reset Slots" button for the
+      change to take effect.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"># Patients Queued</td>
+    <td align="justify">
+      The number of patients queued (i.e. on the waiting list) at the
+      start of the simulation run.  If zero (the default) then there
+      are no patients queued at the beginning of the run. Queued
+      patients are assumed to have been referred in the past (before
+      period 0).  The number of patients referred per past period is
+      based on the # Referrals and Distribution settings.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Max. Slots/Period</td>
+    <td align="justify">
+      This defines the maximum number of clinic appointment slots per
+      period you intend to offer during the duration of the
+      simulation.  It is used to size the display of slots and
+      appointments in the display panel.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Av.Slots/Period</td>
+    <td align="justify">
+      This defines the average number of clinic slots per period for
+      the duration of the simulation run.  The exact number of slots
+      for each period can be set from the display panel, by clicking
+      on the appropriate location. For more details, please see the
+      description of the simulation results panel. If you change this value, 
+      you will need to to click on the the "Reset Slots" button
+      to effect the change.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Breach Threshold</td>
+    <td align="justify">
+      This defines the maximum number of periods that a patient have
+      to wait to avoid breaking the waiting time threshold.
+      Appointment slots are coloured to indicate if an appointment
+      breached the maximum waiting time (red) or was within the limit
+      (green).
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Distribution</td>
+    <td align="justify">
+      This setting controls how many new patients are referred during
+      any one period.  If Uniform, the every period has exactly the
+      same number of new patients referred, that is the the number of
+      referrals you defined (see # Referals).  If set to Normal, then
+      the number of new patients is randomised, based on a normal
+      distribution, using the number of Referals as the mean.
+      Therefore the number of patient referrals could be much higher,
+      or lower, than the the number of referrals you have set.  This
+      setting is probably more realisitic than Uniform, but no more
+      accurate. For a primer on normal distribution, <a
+      href="http://www.mathsisfun.com/data/standard-normal-distribution.html">this</a>
+      is quite good for non-mathematicians (that includes me).
+    </td>
+  </tr>
+</table>
+<h2>Results</h2>
+<table cellspacing="0" cellborder="2" width="600" valign="top">
+  <tr>
+    <th align="left">Name</th>
+    <th align="left">Description</th>
+  </tr>
+  <tr>
+    <td valign="top">Total # Patients Breached</td>
+    <td align="justify">
+      This displays the total number of patients who were not seen
+      within the breach threshold at the end of the simulation run.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Average Queue Time</td>
+    <td align="justify">
+      This displays the average waiting time for all patients, both
+      those breaching the threshold and not.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Total Unused Slots</td>
+    <td align="justify">
+      This displays how many clinic slots were available but never
+      actually used to see a patient.
+    </td>
+  </tr>
+</table>
+<h2>Controls</h2>
+<table cellspacing="0" cellborder="2" width="600" valign="top">
+  <tr>
+    <th align="left" width="100">Name</th>
+    <th align="left">Description</th>
+  </tr>
+  <tr>
+    <td valign="top">Show Slots</td>
+    <td align="justify">
+      When clicked, the appointment slots defined for each period are
+      displayed on the graphics panel.  These are shown as blue
+      rectangles.  The number of slots available for any period can be
+      modified by clocking on the graphical display panel.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Reset Slots</td>
+    <td align="justify">
+      When clicked, this clears any changes you have made to the
+      number of available slots for specific periods and returns the
+      number of slots for each period to the average number of slots
+      defined.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Run</td>
+    <td align="justify">
+      When clicked, this will run the simulation.  Appointment slots
+      are coloured green for patients seen within the breach
+      threshold, red for outside the threshold and blue for an unused
+      clinic slot.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Clear</td>
+    <td align="justify">
+      When clicked, this will clear the graphics display.  The
+      statistics while remain until a new simulation is run.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Import</td>
+    <td align="justify">
+      This button does nothing (yet).
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">Export</td>
+    <td align="justify">
+      This button does nothing (yet).
+    </td>
+</table>
+<h2>Graphics Panel</h2>
+<p>
+  The graphics panel has two functions:
+</p>
+<ol>
+  <li>Display of simulation results</li>
+  <li>Display and editing of clinic appointment slots</li>
+</ol>
+<p>
+  The graphic panel is of a fixed size.  If the number of slots and/or
+  duration will not fit into the panel display, scroll bars will
+  appear to allow viewing the whole of the results.
+</p>
+<h3>Simulation Results</h3>
+<p>
+  After clicking the Run button in the Controls section, the
+  simulation results are displayed in this area.  Each period is
+  numbered on the X-axis at the foot of the panel starting from 0,
+  which is the current period. Slots are number on the left of the
+  panel, the Y-axis.  Positions with no appointment slot are shown
+  with a + character.  Appointment slots are coloured green for
+  patients seen within the breach threshold, red for outside the
+  threshold and blue for an unused clinic slot.
+</p>
+<h3>Editing Appointment Slots</h3>
+<p>
+  By clicking the "Show Slots" button, the number of slots available
+  will be displayed, appearing as blue squares.  The initial display
+  is based on the average number of slots you have defined.  It is
+  possible to change the number of slots for any period by clicking on
+  the appropriate location on the graphics panel.  The number of slots
+  selected will be then be replicated into the future until either the
+  maximum duration is reached, or a previously adjusted slot count is
+  found, whichever is encounted first.  It is probably best to
+  experiment with this to get a feel for the process (you can't do any harm!).
+</p>
+<p>
+  You can reset the slots counts back to the default setting by
+  clicking on "Reset Slots".  You will lose any changes you have made
+  to the slot counts for individual periods, so don't click this
+  button unless you are sure you no longer need the slot settings.
+</p>
+<h2>Technical Details</h2>
+<p>
+  The simulation is written in ClojureScript, using the HTML5 Canvas
+  object for the graohics display, and runs entirely in the browser.
+  Not all browsers support the Canvas object (although all recent ones
+  should).  If your browser does not support the Canvas object, the
+  simulation will refuse to run.
+</p>
+<p>
+  If the simlation will not run, I recommend upgrading to the latest
+  version of Chrome, Safari, Firefox, Opera or IE (9 or later).
+</p>
+<h2>Go For It</h2>
+<p>
+  OK, now you have read and thoroughly digested the documentation (I'm
+  sure), please click <a href="pat.hml">here</a> to start the
+  simulator.
+</p>

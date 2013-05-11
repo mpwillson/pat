@@ -76,11 +76,7 @@
     (gui/init-slots [[0 (gui/get-int :navslots)]])
     (if (gui/canvas-available)
       (gui/set-mouse-refresh set-slots)
-      (.write js/document "<p>I can't run in your browser!</p>")))
-
+      (.write js/document "<h1>Unsupported Browser</h1> <p>Please consider upgrading to the latest version of Chrome, Firefox, Opera, Safari or IE.</p>")))
 ;; TBD 
 ;;
 ;; Determine if browser is supported
-;; Display breach numbers and average waiting time
-;; Improve presentation
-;; Write documentation

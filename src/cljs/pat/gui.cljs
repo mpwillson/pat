@@ -47,16 +47,16 @@
    
 ;; drawing many circles consumes much CPU time
 (defn draw-symbol 
-  [ctx x y radius colour]
+  [ctx x y size colour]
   (set! (.-fillStyle ctx) colour)
-  (.fillRect ctx x y radius radius))
+  (.fillRect ctx x y size size))
 
 (defn draw-column [ctx n cvals ew eh stride height sla]
   (doall
    (map (fn [v y]
           (draw-symbol ctx (* (inc n) stride) y 
                        ew (nth colorvec (colour-map v sla))))
-        cvals (range (- height (* 2 stride)) 0 (* -1 stride)))))
+        cvals (range (- height (* 2.5 stride)) 0 (- stride)))))
 
 (defn merge-slots
   "Remove adjacent slots with the same slot count."
@@ -78,17 +78,17 @@
                                 (into slots [new-slot]))) []))))
 
 (defn draw-axes
-  [ctx h nperiods stride]
+  [ctx h nslots nperiods stride]
   (set! (.-fillStyle ctx) "#00000")
   (doseq [n (range nperiods)]
-    (.fillText ctx (str n) (* (inc n) stride) (- h (/ stride 2))))
+    (.fillText ctx (str n) (* (inc n) stride) (- h stride 2)))
   (doall (map
          #(.fillText ctx (format "%2d" %2) 1 %1)
-         (range (- h stride 10) 0 (- stride))
-         (range 1 (inc nperiods))))
+         (range (- h (* 2 stride)) 0 (- stride))
+         (range 1 (inc nslots))))
   ;; draw markers
   (doseq [x (range (* 1 stride) (* (inc nperiods) stride) stride)
-          y (range (- h (+ 10 stride)) 0 (- stride))]
+          y (range (- h (* 2 stride)) 0 (- stride))]
     (.fillText ctx "+" x y)))
 
 (defn clear []
@@ -100,14 +100,15 @@
 
 (defn draw-graph [values]
   (clear)
-  (let [height (* (+ (get-int :nslots) 2) stride)
+  (let [nslots (get-int :nslots)
+        height (* (+ nslots 2) stride)
         sla (get-int :sla)
         nperiods (get-int :nperiods)
         ctx (get-context)
         marker-size (int (/ stride 2))]
     (set! (.-height (get-canvas)) height)
     (set! (.-width (get-canvas)) (* (+ nperiods 2) stride))
-    (draw-axes ctx height nperiods stride)
+    (draw-axes ctx height nslots nperiods stride)
     (doseq [n (range nperiods)]
       (draw-column ctx n (nth values n) marker-size marker-size
                    stride height sla))))
@@ -127,7 +128,7 @@
         height (.-height (get-canvas))
         period (dec (int (/ mouse-x stride)))
         x (* stride period)
-        slots (int (/ (- height mouse-y) stride))
+        slots (dec (int (/ (- height mouse-y) stride)))
         y (* stride (int (/ mouse-y stride)))]
     (handle-slots [period slots])
     (when @refresh-fn (@refresh-fn))
