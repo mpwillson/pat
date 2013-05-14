@@ -9,5 +9,5 @@
   :source-paths ["src/clj"]
   :cljsbuild {:builds [{:source-paths ["src/cljs"]
                         :compiler {:output-to "resources/public/pat.js"
-                                   :optimizations :whitespace
+                                   :optimizations :simple
                                    :pretty-print true}}]})
