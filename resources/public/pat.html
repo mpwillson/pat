@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <script type="text/javascript" src="pat.js"></script>
     <title>Patient Waiting Time Simulator</title>
@@ -12,83 +11,88 @@
     </style>
   </head>
   <body onload="pat.setup()" bgcolor="#ffffff">
-    <h1>Patient Waiting Time Simulator</h1>
     <table cellspacing="0" cellpadding="0">
       <tr>
-        <td width="100">
+        <th class="title" width="100" valign="top">
+          Patient
+        </th>
+        <th colspan="6" class="params">Parameters</th>
+        <th colspan="2" class="results">Results</th>
+        <th colspan="2" class="controls">Controls</th>
+      </tr>
+      <tr>
+        <td class="title" width="100" valign="top">Waiting</td>
+        <td class="params"># Periods:</td>
+        <td class="params">
+          <input type="text" id="nperiods" size="6" maxlength="80"/>
         </td>
-        <td valign="top">
-          <table cellspacing="0" cellpadding="0" bgcolor="#ffe800">
-            <tr>
-              <td colspan="6" style="font-weight: bold">Parameters</td>
-            </tr>
-            <tr>
-              <td># Periods:</td>
-              <td><input type="text" id="nperiods" size="10" maxlength="80"/></td>
-              <td>Max. Slots/Period</td>
-              <td><input type="text" id="nslots" size="10" maxlength="80"/></td>
-              <td><em>Distribution</em></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td># Referrals:</td>
-              <td><input type="text" id="nreferrals" size="10" maxlength="80"/></td>
-              <td>Av. Slots/Period:</td>
-              <td><input type="text" id="navslots" size="10" maxlength="80"/></td>
-              <td>Uniform:</td>
-              <td><input type="radio" name="distribution" 
-              id="uniform" value="1" checked="checked"/></td>
-            </tr>
-            <tr>
-              <td># Patients Queued:</td>
-              <td><input type="text" id="nqueued" size="10" maxlength="80"/></td>
-              <td>Breach Threshold:</td>
-              <td><input type="text" id="sla" size="10" maxlength="80"/></td>
-              <td>Normal:</td>
-              <td><input type="radio" name="distribution" id="normal" value="0"/></td>
-            </tr>
-          </table>
+        <td class="params">Max. Slots/Period</td>
+        <td class="params">
+          <input type="text" id="nslots" size="6" maxlength="80"/>
         </td>
-        <td valign="top">
-          <table cellspacing="0" cellpadding="0" bgcolor="#14a2d4">
-            <tr>
-              <td colspan="2" style="font-weight: bold; color: white">Results</td>
-            </tr>
-            <tr>
-              <td style="color: white">Total # Patients Breached:</td>
-              <td><input type="text" id="nbreached" size="10" maxlength="80"/></td>
-            </tr>
-            <tr>
-              <td style="color: white">Average Queue Time:</td>
-              <td><input type="text" id="avqtime" size="10" maxlength="80"/></td>
-            </tr>
-            <tr>
-              <td style="color: white">Total Unused Slots:</td>
-              <td><input type="text" id="unusedslots" size="10" maxlength="80"/></td>
-            </tr>
-          </table>
+        <td class="params" colspan="2"><em>Distribution</em></td>
+        <td class="results">Total # Patients Breached:</td>
+        <td class="results">
+          <input type="text" id="nbreached" size="10" maxlength="80"/>
         </td>
-        <td valign="top">
-          <table cellspacing="0" cellpadding="0" bgcolor="#af5eac">
-            <tr>
-              <td style="color: white; font-weight: bold;">Controls</td>
-            </tr>
-            <tr>
-              <td align="center"><input type="button" value="Show Slots" 
-              onclick="pat.set_slots(false)"/></td>
-              <td align="center"><input type="button" value="Reset Slots" 
-              onclick="pat.set_slots(true)"/></td></tr>
-              <tr><td align="center"><input type="button" value="Run" 
-              onclick="pat.start()"/></td>
-              <td align="center"><input type="button" value="Clear" 
-              onclick="gui.clear()"/></td>
-              </tr>
-              <tr><td align="center"><input type="button" value="Import" 
-              onclick=""/></td>
-              <td align="center"><input type="button" value="Export" 
-              onclick=""/></td>
-              </tr>
-          </table>
+        <td class="controls" align="center">
+          <input type="button" value="Show Slots" 
+                 onclick="pat.set_slots(false)"/>
+        </td>
+        <td class="controls" align="center">
+          <input type="button" value="Reset Slots" 
+                 onclick="pat.set_slots(true)"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="title">Time</td>
+        <td class="params"># Referrals:</td>
+        <td class="params">
+          <input type="text" id="nreferrals" size="6" maxlength="80"/>
+        </td>
+        <td class="params">Av. Slots/Period:</td>
+        <td class="params">
+          <input type="text" id="navslots" size="6" maxlength="80"/>
+        </td>
+        <td class="params">Uniform:</td>
+        <td class="params">
+          <input type="radio" name="distribution" 
+                 id="uniform" value="1" checked="checked"/>
+        </td>
+        <td class="results">Average Queue Time:</td>
+        <td class="results">
+          <input type="text" id="avqtime" size="10" maxlength="80"/>
+        </td>
+        <td class="controls" align="center">
+          <input type="button" value="Run" onclick="pat.start()"/>
+        </td>
+        <td class="controls" align="center">
+          <input type="button" value="Clear" onclick="gui.clear()"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="title">Simulator</td>
+        <td class="params"># Patients Queued:</td>
+        <td class="params">
+          <input type="text" id="nqueued" size="6" maxlength="80"/>
+        </td>
+        <td class="params">Breach Threshold:</td>
+        <td class="params">
+          <input type="text" id="sla" size="6" maxlength="80"/>
+        </td>
+        <td class="params">Normal:</td>
+        <td class="params">
+          <input type="radio" name="distribution" id="normal" value="0"/>
+        </td>
+        <td class="results">Total Unused Slots:</td>
+        <td class="results">
+          <input type="text" id="unusedslots" size="10" maxlength="80"/>
+        </td>
+        <td class="controls" align="center">
+          <input type="button" value="Import" onclick=""/>
+        </td>
+        <td class="controls" align="center">
+          <input type="button" value="Export" onclick=""/>
         </td>
       </tr>
     </table>
