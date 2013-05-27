@@ -1,9 +1,26 @@
-(ns pat)
+(ns pat
+  (:require [goog.net.cookies :as cks]
+            [cljs.reader :as reader])
+  (:use [clojure.string :only [split]]))
 
 (def prog-name "Patient Waiting Time Simulator")
-(def version "0.1")
+(def version "0.2")
 (def title (str prog-name " " version))
 
+(def param-keys [:nperiods :nreferrals :ncurrbreach :nslots :sla :navslots 
+                 :slots])
+(def param-defaults ["52" "22" "0" "30" "10" "22" "[[0 22]]"])
+
+(defn set-cookies
+  [param-map]
+  (let [expires (* 365 3600 24)]
+    (doseq [[k v] param-map] (.set goog.net.cookies (name k) v expires))))
+
+(defn get-cookies []
+  (let [keys (.getKeys goog.net.cookies)
+        vals (.getValues goog.net.cookies)]
+    (zipmap (map keyword keys) vals)))
+  
 (defn find-span
   "Return vector of [period nbooked] in increasing period order."
   [nqueued arfn span booked]
@@ -36,47 +53,56 @@
       (let [nperiods (gui/get-int :nperiods)
             sla (gui/get-int :sla)
             nreferrals  (gui/get-int :nreferrals)
-            nqueued  (gui/get-int :nqueued)
+            ncurr-breaching  (gui/get-int :ncurrbreach)
+            navslots (gui/get-int :navslots)
             ndist (gui/get-checked :normal)
-            nslots (simul/gen-periods [] @gui/slot-vec)
-            qtotal (if (zero? nqueued) 0 (+ (* sla nreferrals) nqueued))
+            nslots (gui/get-int :nslots)
+            period-slots (simul/gen-periods [] @gui/slot-vec)
+            qtotal (if (zero? ncurr-breaching)
+                     0 
+                     (+ (* sla nreferrals) ncurr-breaching))
             arfn (if ndist #(simul/grand nreferrals) (constantly nreferrals))
             q (simul/mkqueue)]
         (gui/clear)
-        ;; add queued requests
-        (doseq [[p n] (find-span nqueued arfn 1 [])]
+        (set-cookies (zipmap param-keys 
+                             (map str [nperiods nreferrals ncurr-breaching 
+                                       nslots sla navslots @gui/slot-vec])))
+        ;; add queued requests (always assume uniform arrival rate)
+        (doseq [[p n] (find-span qtotal (constantly nreferrals) 1 [])]
           (simul/add-requests q p n))
         ;; run the simulation
-        (let [result (simul/run-simul q nperiods nslots arfn)
-              nbreached (apply +  (map
-                                   #(count (filter (fn [e] (> e sla)) %))
-                                   result))
+        (let [result (simul/run-simul q nperiods period-slots arfn)
+              nbreached (apply + (map
+                                  #(count (filter (fn [e] (> e sla)) %))
+                                  result))
               avq (avqtime result sla)
               unusedslots (get-empty-count result)]
           (gui/draw-graph result)
-          (gui/set-value :nbreached (str nbreached))
-          (gui/set-value :avqtime (format "%.1f" avq))
-          (gui/set-value :unusedslots (str unusedslots))))
+          (doseq [[k v] {:nbreached (str nbreached) 
+                         :avqtime (format "%.1f" avq)
+                         :unusedslots (str unusedslots)}]
+            (gui/set-value k v))))
       (catch js/Error _
         (js/alert (str "ERROR: " _)))))
 
 (defn set-slots
   [initialise]
   (when initialise (gui/init-slots [[0 (gui/get-int :navslots)]]))
-  (let [nslots (simul/gen-periods [] @gui/slot-vec)
+  (let [period-slots (simul/gen-periods [] @gui/slot-vec)
         nperiods (gui/get-int :nperiods)
-        slot-data (take nperiods (map #(repeat % -1) nslots))]
+        slot-data (take nperiods (map #(repeat % -1) period-slots))]
     (gui/draw-graph slot-data)))
 
 
 (defn setup []
-    (doseq [[key value] [[:nperiods "52"] [:nreferrals "22"] [:nqueued "0"]
-                         [:nslots "30"] [:sla "10"] [:navslots "22"]]]
-      (gui/set-value key value))
-    (gui/init-slots [[0 (gui/get-int :navslots)]])
-    (if (gui/canvas-available)
-      (gui/set-mouse-refresh set-slots)
-      (.write js/document "<h1>Unsupported Browser</h1> <p>Please consider upgrading to the latest version of Chrome, Firefox, Opera, Safari or IE.</p>")))
-;; TBD 
-;;
-;; Determine if browser is supported
+  (gui/set-value :version (str "Version " version))
+  (when (.isEmpty goog.net.cookies)
+    (set-cookies (zipmap param-keys param-defaults)))
+  (doseq [[k v] (get-cookies)]
+    (if (= k :slots)
+      (gui/init-slots (reader/read-string v))
+      (gui/set-value k v)))
+  ;;(gui/init-slots [[0 (gui/get-int :navslots)]])
+  (if (gui/canvas-available)
+    (gui/set-mouse-refresh set-slots)
+    (.write js/document "<h1>Unsupported Browser</h1> <p>Please consider upgrading to the latest version of Chrome, Firefox, Opera, Safari or IE.</p>")))

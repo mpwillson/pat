@@ -137,3 +137,7 @@
 
 (defn set-mouse-refresh [fn]
   (reset! refresh-fn fn))
+
+(defn get-file []
+  (let [filer (.getElementById js/document "filer")]))
+        
