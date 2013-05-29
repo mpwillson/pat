@@ -7,6 +7,15 @@
 (def version "0.2")
 (def title (str prog-name " " version))
 
+(def unsupported 
+  (str "<h1>Unsupported Browser</h1>" 
+       "<p>Please consider upgrading to the latest version of Chrome, Firefox, "
+       "Opera, Safari or IE9.</p>"))
+
+(def no-cookies 
+  (str "<p>Your browser environment prohibits cookies; parameters cannot "
+       "be preserved between visits.</p>"))
+
 (def param-keys [:nperiods :nreferrals :ncurrbreach :nslots :sla :navslots 
                  :slots])
 (def param-defaults ["52" "22" "0" "30" "10" "22" "[[0 22]]"])
@@ -24,7 +33,7 @@
 (defn find-span
   "Return vector of [period nbooked] in increasing period order."
   [nqueued arfn span booked]
-  (if (not (pos? nqueued))
+  (if (not (pos? nqueued)) ; true for 0 or negative
     (reverse booked)
     (let [nbookings (arfn)
           newq (- nqueued nbookings)
@@ -95,14 +104,18 @@
 
 
 (defn setup []
-  (gui/set-value :version (str "Version " version))
-  (when (.isEmpty goog.net.cookies)
-    (set-cookies (zipmap param-keys param-defaults)))
-  (doseq [[k v] (get-cookies)]
-    (if (= k :slots)
-      (gui/init-slots (reader/read-string v))
-      (gui/set-value k v)))
-  ;;(gui/init-slots [[0 (gui/get-int :navslots)]])
-  (if (gui/canvas-available)
-    (gui/set-mouse-refresh set-slots)
-    (.write js/document "<h1>Unsupported Browser</h1> <p>Please consider upgrading to the latest version of Chrome, Firefox, Opera, Safari or IE.</p>")))
+  (let [param-map  (zipmap param-keys param-defaults)]
+    (gui/set-value :version (str "Version " version))
+    (when (.isEmpty goog.net.cookies)
+      (set-cookies param-map))
+    (let [cookies (get-cookies)
+          params (or (not-empty cookies) param-map)]
+      (doseq [[k v] params]
+        (if (= k :slots)
+          (gui/init-slots (reader/read-string v))
+          (gui/set-value k v)))
+      (when (empty? cookies)
+        (.insertAdjacentHTML (.-body js/document) "beforeEnd" no-cookies)))
+    (if (gui/canvas-available)
+      (gui/set-mouse-refresh set-slots)
+      (.write js/document unsupported))))
