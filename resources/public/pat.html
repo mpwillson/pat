@@ -53,7 +53,8 @@
         </td>
         <td class="params">Av. Slots/Period:</td>
         <td class="params">
-          <input type="text" id="navslots" size="6" maxlength="80"/>
+          <input type="text" id="navslots" size="6" maxlength="80" 
+                 onchange="pat.set_slots(true)"/>
         </td>
         <td class="params">Uniform:</td>
         <td class="params">
@@ -99,6 +100,7 @@
     </table>
     <input type="text" id="version" disabled="disabled" size="6"></input>
     <input type="file" id="filer">
+    <input type="hidden" id="slots" value=""></input>
     <div style="width: 1250px;height: 700px;overflow: auto">
       <canvas id="patCanvas" width="1200" height="650"
               style="border:1px solid #000000;" onclick="gui.mouse_click(event)">

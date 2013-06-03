@@ -33,10 +33,10 @@
   (.getContext (get-canvas) "2d"))
 
 (defn get-int [field]
-  (try
-    (js/parseInt (get-value field))
-    (catch js/Error _
-      0)))
+  (let [val (js/parseInt (get-value field))]
+    (if (js/isNaN val)
+      field
+      val)))
 
 (defn colour-map
   [v sla]

@@ -57,34 +57,35 @@
   [lst]
   (reduce + (for [p lst] (count (filter neg? p)))))
 
+(defn get-params [keys]
+  (reduce #(assoc %1 %2 (gui/get-int %2)) {} keys))
+
 (defn start []
   (try
-      (let [nperiods (gui/get-int :nperiods)
-            sla (gui/get-int :sla)
-            nreferrals  (gui/get-int :nreferrals)
-            ncurr-breaching  (gui/get-int :ncurrbreach)
-            navslots (gui/get-int :navslots)
+      (let [p (get-params param-keys)
             ndist (gui/get-checked :normal)
-            nslots (gui/get-int :nslots)
             period-slots (simul/gen-periods [] @gui/slot-vec)
-            qtotal (if (zero? ncurr-breaching)
+            qtotal (if (zero? (:ncurrbreach p))
                      0 
-                     (+ (* sla nreferrals) ncurr-breaching))
-            arfn (if ndist #(simul/grand nreferrals) (constantly nreferrals))
+                     (+ (* (:sla p) (:nreferrals p)) (:ncurrbreach p)))
+            arfn (if ndist 
+                   #(simul/grand 
+                     (:nreferrals p)) (constantly (:nreferrals p)))
             q (simul/mkqueue)]
         (gui/clear)
-        (set-cookies (zipmap param-keys 
-                             (map str [nperiods nreferrals ncurr-breaching 
-                                       nslots sla navslots @gui/slot-vec])))
+        (set-cookies (assoc p :slots @gui/slot-vec))
+            #_(zipmap param-keys 
+                      (map str [nperiods nreferrals ncurr-breaching 
+                                nslots sla navslots @gui/slot-vec]))
         ;; add queued requests (always assume uniform arrival rate)
-        (doseq [[p n] (find-span qtotal (constantly nreferrals) 1 [])]
+        (doseq [[p n] (find-span qtotal (constantly (:nreferrals p)) 1 [])]
           (simul/add-requests q p n))
         ;; run the simulation
-        (let [result (simul/run-simul q nperiods period-slots arfn)
+        (let [result (simul/run-simul q (:nperiods p) period-slots arfn)
               nbreached (apply + (map
-                                  #(count (filter (fn [e] (> e sla)) %))
+                                  #(count (filter (fn [e] (> e (:sla p))) %))
                                   result))
-              avq (avqtime result sla)
+              avq (avqtime result (:sla p))
               unusedslots (get-empty-count result)]
           (gui/draw-graph result)
           (doseq [[k v] {:nbreached (str nbreached) 
@@ -111,9 +112,8 @@
     (let [cookies (get-cookies)
           params (or (not-empty cookies) param-map)]
       (doseq [[k v] params]
-        (if (= k :slots)
-          (gui/init-slots (reader/read-string v))
-          (gui/set-value k v)))
+          (gui/set-value k v))
+      (gui/init-slots (reader/read-string (:slots params)))
       (when (empty? cookies)
         (.insertAdjacentHTML (.-body js/document) "beforeEnd" no-cookies)))
     (if (gui/canvas-available)

@@ -22842,15 +22842,15 @@ pat.param_keys = cljs.core.PersistentVector.fromArray(["\ufdd0:nperiods", "\ufdd
 pat.param_defaults = cljs.core.PersistentVector.fromArray(["52", "22", "0", "30", "10", "22", "[[0 22]]"], true);
 pat.set_cookies = function set_cookies(param_map) {
   var expires = 365 * 3600 * 24;
-  var G__7519 = cljs.core.seq.call(null, param_map);
+  var G__2943 = cljs.core.seq.call(null, param_map);
   while(true) {
-    if(G__7519) {
-      var vec__7520 = cljs.core.first.call(null, G__7519);
-      var k = cljs.core.nth.call(null, vec__7520, 0, null);
-      var v = cljs.core.nth.call(null, vec__7520, 1, null);
+    if(G__2943) {
+      var vec__2944 = cljs.core.first.call(null, G__2943);
+      var k = cljs.core.nth.call(null, vec__2944, 0, null);
+      var v = cljs.core.nth.call(null, vec__2944, 1, null);
       goog.net.cookies.set(cljs.core.name.call(null, k), v, expires);
-      var G__7521 = cljs.core.next.call(null, G__7519);
-      G__7519 = G__7521;
+      var G__2945 = cljs.core.next.call(null, G__2943);
+      G__2943 = G__2945;
       continue
     }else {
       return null
@@ -22871,22 +22871,22 @@ pat.find_span = function find_span(nqueued, arfn, span, booked) {
       var nbookings = arfn.call(null);
       var newq = nqueued - nbookings;
       var nq = newq < 0 ? nqueued : nbookings;
-      var G__7523 = newq;
-      var G__7524 = arfn;
-      var G__7525 = span + 1;
-      var G__7526 = cljs.core.conj.call(null, booked, cljs.core.PersistentVector.fromArray([-span, nq], true));
-      nqueued = G__7523;
-      arfn = G__7524;
-      span = G__7525;
-      booked = G__7526;
+      var G__2947 = newq;
+      var G__2948 = arfn;
+      var G__2949 = span + 1;
+      var G__2950 = cljs.core.conj.call(null, booked, cljs.core.PersistentVector.fromArray([-span, nq], true));
+      nqueued = G__2947;
+      arfn = G__2948;
+      span = G__2949;
+      booked = G__2950;
       continue
     }
     break
   }
 };
 pat.rolling_average = function rolling_average(av, lst, sla) {
-  var missed = cljs.core.filter.call(null, function(p1__7522_SHARP_) {
-    return p1__7522_SHARP_ > sla
+  var missed = cljs.core.filter.call(null, function(p1__2946_SHARP_) {
+    return p1__2946_SHARP_ > sla
   }, cljs.core.filter.call(null, cljs.core.pos_QMARK_, lst));
   var n = cljs.core.count.call(null, missed);
   var newav = n === 0 ? av : cljs.core.reduce.call(null, cljs.core._PLUS_, missed) / n;
@@ -22897,21 +22897,21 @@ pat.rolling_average = function rolling_average(av, lst, sla) {
   }
 };
 pat.avqtime = function avqtime(result, sla) {
-  return cljs.core.reduce.call(null, function(p1__7527_SHARP_, p2__7528_SHARP_) {
-    return pat.rolling_average.call(null, p1__7527_SHARP_, p2__7528_SHARP_, sla)
+  return cljs.core.reduce.call(null, function(p1__2951_SHARP_, p2__2952_SHARP_) {
+    return pat.rolling_average.call(null, p1__2951_SHARP_, p2__2952_SHARP_, sla)
   }, 0, result)
 };
 pat.get_empty_count = function get_empty_count(lst) {
   return cljs.core.reduce.call(null, cljs.core._PLUS_, function() {
-    var iter__2611__auto__ = function iter__7532(s__7533) {
+    var iter__2611__auto__ = function iter__2957(s__2958) {
       return new cljs.core.LazySeq(null, false, function() {
-        var s__7533__$1 = s__7533;
+        var s__2958__$1 = s__2958;
         while(true) {
-          var temp__4092__auto__ = cljs.core.seq.call(null, s__7533__$1);
+          var temp__4092__auto__ = cljs.core.seq.call(null, s__2958__$1);
           if(temp__4092__auto__) {
             var xs__4579__auto__ = temp__4092__auto__;
             var p = cljs.core.first.call(null, xs__4579__auto__);
-            return cljs.core.cons.call(null, cljs.core.count.call(null, cljs.core.filter.call(null, cljs.core.neg_QMARK_, p)), iter__7532.call(null, cljs.core.rest.call(null, s__7533__$1)))
+            return cljs.core.cons.call(null, cljs.core.count.call(null, cljs.core.filter.call(null, cljs.core.neg_QMARK_, p)), iter__2957.call(null, cljs.core.rest.call(null, s__2958__$1)))
           }else {
             return null
           }
@@ -22922,74 +22922,74 @@ pat.get_empty_count = function get_empty_count(lst) {
     return iter__2611__auto__.call(null, lst)
   }())
 };
+pat.get_params = function get_params(keys) {
+  return cljs.core.reduce.call(null, function(p1__2953_SHARP_, p2__2954_SHARP_) {
+    return cljs.core.assoc.call(null, p1__2953_SHARP_, p2__2954_SHARP_, gui.get_int.call(null, p2__2954_SHARP_))
+  }, cljs.core.ObjMap.EMPTY, keys)
+};
 pat.start = function start() {
   try {
-    var nperiods = gui.get_int.call(null, "\ufdd0:nperiods");
-    var sla = gui.get_int.call(null, "\ufdd0:sla");
-    var nreferrals = gui.get_int.call(null, "\ufdd0:nreferrals");
-    var ncurr_breaching = gui.get_int.call(null, "\ufdd0:ncurrbreach");
-    var navslots = gui.get_int.call(null, "\ufdd0:navslots");
+    var p = pat.get_params.call(null, pat.param_keys);
     var ndist = gui.get_checked.call(null, "\ufdd0:normal");
-    var nslots = gui.get_int.call(null, "\ufdd0:nslots");
     var period_slots = simul.gen_periods.call(null, cljs.core.PersistentVector.EMPTY, cljs.core.deref.call(null, gui.slot_vec));
-    var qtotal = ncurr_breaching === 0 ? 0 : sla * nreferrals + ncurr_breaching;
-    var arfn = cljs.core.truth_(ndist) ? function(nperiods, sla, nreferrals, ncurr_breaching, navslots, ndist, nslots, period_slots, qtotal) {
+    var qtotal = (new cljs.core.Keyword("\ufdd0:ncurrbreach")).call(null, p) === 0 ? 0 : (new cljs.core.Keyword("\ufdd0:sla")).call(null, p) * (new cljs.core.Keyword("\ufdd0:nreferrals")).call(null, p) + (new cljs.core.Keyword("\ufdd0:ncurrbreach")).call(null, p);
+    var arfn = cljs.core.truth_(ndist) ? function(p, ndist, period_slots, qtotal) {
       return function() {
-        return simul.grand.call(null, nreferrals)
+        return simul.grand.call(null, (new cljs.core.Keyword("\ufdd0:nreferrals")).call(null, p))
       }
-    }(nperiods, sla, nreferrals, ncurr_breaching, navslots, ndist, nslots, period_slots, qtotal) : cljs.core.constantly.call(null, nreferrals);
+    }(p, ndist, period_slots, qtotal) : cljs.core.constantly.call(null, (new cljs.core.Keyword("\ufdd0:nreferrals")).call(null, p));
     var q = simul.mkqueue.call(null);
     gui.clear.call(null);
-    pat.set_cookies.call(null, cljs.core.zipmap.call(null, pat.param_keys, cljs.core.map.call(null, cljs.core.str, cljs.core.PersistentVector.fromArray([nperiods, nreferrals, ncurr_breaching, nslots, sla, navslots, cljs.core.deref.call(null, gui.slot_vec)], true))));
-    var G__7541_7545 = cljs.core.seq.call(null, pat.find_span.call(null, qtotal, cljs.core.constantly.call(null, nreferrals), 1, cljs.core.PersistentVector.EMPTY));
+    pat.set_cookies.call(null, cljs.core.assoc.call(null, p, "\ufdd0:slots", cljs.core.deref.call(null, gui.slot_vec)));
+    var G__2967_2971 = cljs.core.seq.call(null, pat.find_span.call(null, qtotal, cljs.core.constantly.call(null, (new cljs.core.Keyword("\ufdd0:nreferrals")).call(null, p)), 1, cljs.core.PersistentVector.EMPTY));
     while(true) {
-      if(G__7541_7545) {
-        var vec__7542_7546 = cljs.core.first.call(null, G__7541_7545);
-        var p_7547 = cljs.core.nth.call(null, vec__7542_7546, 0, null);
-        var n_7548 = cljs.core.nth.call(null, vec__7542_7546, 1, null);
-        simul.add_requests.call(null, q, p_7547, n_7548);
-        var G__7549 = cljs.core.next.call(null, G__7541_7545);
-        G__7541_7545 = G__7549;
+      if(G__2967_2971) {
+        var vec__2968_2972 = cljs.core.first.call(null, G__2967_2971);
+        var p_2973__$1 = cljs.core.nth.call(null, vec__2968_2972, 0, null);
+        var n_2974 = cljs.core.nth.call(null, vec__2968_2972, 1, null);
+        simul.add_requests.call(null, q, p_2973__$1, n_2974);
+        var G__2975 = cljs.core.next.call(null, G__2967_2971);
+        G__2967_2971 = G__2975;
         continue
       }else {
       }
       break
     }
-    var result = simul.run_simul.call(null, q, nperiods, period_slots, arfn);
+    var result = simul.run_simul.call(null, q, (new cljs.core.Keyword("\ufdd0:nperiods")).call(null, p), period_slots, arfn);
     var nbreached = cljs.core.apply.call(null, cljs.core._PLUS_, cljs.core.map.call(null, function(result) {
-      return function(p1__7529_SHARP_) {
+      return function(p1__2959_SHARP_) {
         return cljs.core.count.call(null, cljs.core.filter.call(null, function(result) {
           return function(e) {
-            return e > sla
+            return e > (new cljs.core.Keyword("\ufdd0:sla")).call(null, p)
           }
-        }(result), p1__7529_SHARP_))
+        }(result), p1__2959_SHARP_))
       }
     }(result), result));
-    var avq = pat.avqtime.call(null, result, sla);
+    var avq = pat.avqtime.call(null, result, (new cljs.core.Keyword("\ufdd0:sla")).call(null, p));
     var unusedslots = pat.get_empty_count.call(null, result);
     gui.draw_graph.call(null, result);
-    var G__7543 = cljs.core.seq.call(null, cljs.core.ObjMap.fromObject(["\ufdd0:nbreached", "\ufdd0:avqtime", "\ufdd0:unusedslots"], {"\ufdd0:nbreached":[cljs.core.str(nbreached)].join(""), "\ufdd0:avqtime":cljs.core.format.call(null, "%.1f", avq), "\ufdd0:unusedslots":[cljs.core.str(unusedslots)].join("")}));
+    var G__2969 = cljs.core.seq.call(null, cljs.core.ObjMap.fromObject(["\ufdd0:nbreached", "\ufdd0:avqtime", "\ufdd0:unusedslots"], {"\ufdd0:nbreached":[cljs.core.str(nbreached)].join(""), "\ufdd0:avqtime":cljs.core.format.call(null, "%.1f", avq), "\ufdd0:unusedslots":[cljs.core.str(unusedslots)].join("")}));
     while(true) {
-      if(G__7543) {
-        var vec__7544 = cljs.core.first.call(null, G__7543);
-        var k = cljs.core.nth.call(null, vec__7544, 0, null);
-        var v = cljs.core.nth.call(null, vec__7544, 1, null);
+      if(G__2969) {
+        var vec__2970 = cljs.core.first.call(null, G__2969);
+        var k = cljs.core.nth.call(null, vec__2970, 0, null);
+        var v = cljs.core.nth.call(null, vec__2970, 1, null);
         gui.set_value.call(null, k, v);
-        var G__7550 = cljs.core.next.call(null, G__7543);
-        G__7543 = G__7550;
+        var G__2976 = cljs.core.next.call(null, G__2969);
+        G__2969 = G__2976;
         continue
       }else {
         return null
       }
       break
     }
-  }catch(e7540) {
-    if(cljs.core.instance_QMARK_.call(null, Error, e7540)) {
-      var _ = e7540;
+  }catch(e2966) {
+    if(cljs.core.instance_QMARK_.call(null, Error, e2966)) {
+      var _ = e2966;
       return alert([cljs.core.str("ERROR: "), cljs.core.str(_)].join(""))
     }else {
       if("\ufdd0:else") {
-        throw e7540;
+        throw e2966;
       }else {
         return null
       }
@@ -23004,8 +23004,8 @@ pat.set_slots = function set_slots(initialise) {
   var period_slots = simul.gen_periods.call(null, cljs.core.PersistentVector.EMPTY, cljs.core.deref.call(null, gui.slot_vec));
   var nperiods = gui.get_int.call(null, "\ufdd0:nperiods");
   var slot_data = cljs.core.take.call(null, nperiods, cljs.core.map.call(null, function(period_slots, nperiods) {
-    return function(p1__7534_SHARP_) {
-      return cljs.core.repeat.call(null, p1__7534_SHARP_, -1)
+    return function(p1__2960_SHARP_) {
+      return cljs.core.repeat.call(null, p1__2960_SHARP_, -1)
     }
   }(period_slots, nperiods), period_slots));
   return gui.draw_graph.call(null, slot_data)
@@ -23017,34 +23017,31 @@ pat.setup = function setup() {
     pat.set_cookies.call(null, param_map)
   }else {
   }
-  var cookies_7555 = pat.get_cookies.call(null);
-  var params_7556 = function() {
-    var or__3943__auto__ = cljs.core.not_empty.call(null, cookies_7555);
+  var cookies_2981 = pat.get_cookies.call(null);
+  var params_2982 = function() {
+    var or__3943__auto__ = cljs.core.not_empty.call(null, cookies_2981);
     if(cljs.core.truth_(or__3943__auto__)) {
       return or__3943__auto__
     }else {
       return param_map
     }
   }();
-  var G__7553_7557 = cljs.core.seq.call(null, params_7556);
+  var G__2979_2983 = cljs.core.seq.call(null, params_2982);
   while(true) {
-    if(G__7553_7557) {
-      var vec__7554_7558 = cljs.core.first.call(null, G__7553_7557);
-      var k_7559 = cljs.core.nth.call(null, vec__7554_7558, 0, null);
-      var v_7560 = cljs.core.nth.call(null, vec__7554_7558, 1, null);
-      if(cljs.core._EQ_.call(null, k_7559, "\ufdd0:slots")) {
-        gui.init_slots.call(null, cljs.reader.read_string.call(null, v_7560))
-      }else {
-        gui.set_value.call(null, k_7559, v_7560)
-      }
-      var G__7561 = cljs.core.next.call(null, G__7553_7557);
-      G__7553_7557 = G__7561;
+    if(G__2979_2983) {
+      var vec__2980_2984 = cljs.core.first.call(null, G__2979_2983);
+      var k_2985 = cljs.core.nth.call(null, vec__2980_2984, 0, null);
+      var v_2986 = cljs.core.nth.call(null, vec__2980_2984, 1, null);
+      gui.set_value.call(null, k_2985, v_2986);
+      var G__2987 = cljs.core.next.call(null, G__2979_2983);
+      G__2979_2983 = G__2987;
       continue
     }else {
     }
     break
   }
-  if(cljs.core.empty_QMARK_.call(null, cookies_7555)) {
+  gui.init_slots.call(null, cljs.reader.read_string.call(null, (new cljs.core.Keyword("\ufdd0:slots")).call(null, params_2982)));
+  if(cljs.core.empty_QMARK_.call(null, cookies_2981)) {
     document.body.insertAdjacentHTML("beforeEnd", pat.no_cookies)
   }else {
   }
@@ -23084,19 +23081,11 @@ gui.get_context = function get_context() {
   return gui.get_canvas.call(null).getContext("2d")
 };
 gui.get_int = function get_int(field) {
-  try {
-    return parseInt(gui.get_value.call(null, field))
-  }catch(e2985) {
-    if(cljs.core.instance_QMARK_.call(null, Error, e2985)) {
-      var _ = e2985;
-      return 0
-    }else {
-      if("\ufdd0:else") {
-        throw e2985;
-      }else {
-        return null
-      }
-    }
+  var val = parseInt(gui.get_value.call(null, field));
+  if(cljs.core.truth_(isNaN(val))) {
+    return field
+  }else {
+    return val
   }
 };
 gui.colour_map = function colour_map(v, sla) {
@@ -23131,17 +23120,17 @@ gui.merge_slots = function merge_slots(sv, nsv) {
       return nsv
     }else {
       if(cljs.core._EQ_.call(null, cljs.core.second.call(null, cur), cljs.core.second.call(null, nxt))) {
-        var G__2989 = cljs.core.cons.call(null, cur, cljs.core.rest.call(null, cljs.core.rest.call(null, sv)));
-        var G__2990 = nsv;
-        sv = G__2989;
-        nsv = G__2990;
+        var G__9281 = cljs.core.cons.call(null, cur, cljs.core.rest.call(null, cljs.core.rest.call(null, sv)));
+        var G__9282 = nsv;
+        sv = G__9281;
+        nsv = G__9282;
         continue
       }else {
         if("\ufdd0:else") {
-          var G__2991 = cljs.core.rest.call(null, sv);
-          var G__2992 = cljs.core.conj.call(null, nsv, cur);
-          sv = G__2991;
-          nsv = G__2992;
+          var G__9283 = cljs.core.rest.call(null, sv);
+          var G__9284 = cljs.core.conj.call(null, nsv, cur);
+          sv = G__9283;
+          nsv = G__9284;
           continue
         }else {
           return null
@@ -23152,48 +23141,48 @@ gui.merge_slots = function merge_slots(sv, nsv) {
   }
 };
 gui.handle_slots = function handle_slots(new_slot) {
-  var slots = cljs.core.vec.call(null, cljs.core.filter.call(null, function(p1__2986_SHARP_) {
-    return cljs.core.not_EQ_.call(null, cljs.core.first.call(null, p1__2986_SHARP_), cljs.core.first.call(null, new_slot))
+  var slots = cljs.core.vec.call(null, cljs.core.filter.call(null, function(p1__9278_SHARP_) {
+    return cljs.core.not_EQ_.call(null, cljs.core.first.call(null, p1__9278_SHARP_), cljs.core.first.call(null, new_slot))
   }, cljs.core.deref.call(null, gui.slot_vec)));
-  return cljs.core.reset_BANG_.call(null, gui.slot_vec, gui.merge_slots.call(null, cljs.core.vec.call(null, cljs.core.sort.call(null, function(p1__2987_SHARP_, p2__2988_SHARP_) {
-    return cljs.core.first.call(null, p1__2987_SHARP_) < cljs.core.first.call(null, p2__2988_SHARP_)
+  return cljs.core.reset_BANG_.call(null, gui.slot_vec, gui.merge_slots.call(null, cljs.core.vec.call(null, cljs.core.sort.call(null, function(p1__9279_SHARP_, p2__9280_SHARP_) {
+    return cljs.core.first.call(null, p1__9279_SHARP_) < cljs.core.first.call(null, p2__9280_SHARP_)
   }, cljs.core.into.call(null, slots, cljs.core.PersistentVector.fromArray([new_slot], true)))), cljs.core.PersistentVector.EMPTY))
 };
 gui.draw_axes = function draw_axes(ctx, h, nslots, nperiods, stride) {
   ctx.fillStyle = "#00000";
-  var G__2998_3001 = cljs.core.seq.call(null, cljs.core.range.call(null, nperiods));
+  var G__9290_9293 = cljs.core.seq.call(null, cljs.core.range.call(null, nperiods));
   while(true) {
-    if(G__2998_3001) {
-      var n_3002 = cljs.core.first.call(null, G__2998_3001);
-      ctx.fillText([cljs.core.str(n_3002)].join(""), (n_3002 + 1) * stride, h - stride - 2);
-      var G__3003 = cljs.core.next.call(null, G__2998_3001);
-      G__2998_3001 = G__3003;
+    if(G__9290_9293) {
+      var n_9294 = cljs.core.first.call(null, G__9290_9293);
+      ctx.fillText([cljs.core.str(n_9294)].join(""), (n_9294 + 1) * stride, h - stride - 2);
+      var G__9295 = cljs.core.next.call(null, G__9290_9293);
+      G__9290_9293 = G__9295;
       continue
     }else {
     }
     break
   }
-  cljs.core.doall.call(null, cljs.core.map.call(null, function(p1__2994_SHARP_, p2__2993_SHARP_) {
-    return ctx.fillText(cljs.core.format.call(null, "%2d", p2__2993_SHARP_), 1, p1__2994_SHARP_)
+  cljs.core.doall.call(null, cljs.core.map.call(null, function(p1__9286_SHARP_, p2__9285_SHARP_) {
+    return ctx.fillText(cljs.core.format.call(null, "%2d", p2__9285_SHARP_), 1, p1__9286_SHARP_)
   }, cljs.core.range.call(null, h - 2 * stride, 0, -stride), cljs.core.range.call(null, 1, nslots + 1)));
-  var G__2999 = cljs.core.seq.call(null, cljs.core.range.call(null, 1 * stride, (nperiods + 1) * stride, stride));
+  var G__9291 = cljs.core.seq.call(null, cljs.core.range.call(null, 1 * stride, (nperiods + 1) * stride, stride));
   while(true) {
-    if(G__2999) {
-      var x = cljs.core.first.call(null, G__2999);
-      var G__3000_3004 = cljs.core.seq.call(null, cljs.core.range.call(null, h - 2 * stride, 0, -stride));
+    if(G__9291) {
+      var x = cljs.core.first.call(null, G__9291);
+      var G__9292_9296 = cljs.core.seq.call(null, cljs.core.range.call(null, h - 2 * stride, 0, -stride));
       while(true) {
-        if(G__3000_3004) {
-          var y_3005 = cljs.core.first.call(null, G__3000_3004);
-          ctx.fillText("+", x, y_3005);
-          var G__3006 = cljs.core.next.call(null, G__3000_3004);
-          G__3000_3004 = G__3006;
+        if(G__9292_9296) {
+          var y_9297 = cljs.core.first.call(null, G__9292_9296);
+          ctx.fillText("+", x, y_9297);
+          var G__9298 = cljs.core.next.call(null, G__9292_9296);
+          G__9292_9296 = G__9298;
           continue
         }else {
         }
         break
       }
-      var G__3007 = cljs.core.next.call(null, G__2999);
-      G__2999 = G__3007;
+      var G__9299 = cljs.core.next.call(null, G__9291);
+      G__9291 = G__9299;
       continue
     }else {
       return null
@@ -23219,13 +23208,13 @@ gui.draw_graph = function draw_graph(values) {
   gui.get_canvas.call(null).height = height;
   gui.get_canvas.call(null).width = (nperiods + 2) * gui.stride;
   gui.draw_axes.call(null, ctx, height, nslots, nperiods, gui.stride);
-  var G__3009 = cljs.core.seq.call(null, cljs.core.range.call(null, nperiods));
+  var G__9301 = cljs.core.seq.call(null, cljs.core.range.call(null, nperiods));
   while(true) {
-    if(G__3009) {
-      var n = cljs.core.first.call(null, G__3009);
+    if(G__9301) {
+      var n = cljs.core.first.call(null, G__9301);
       gui.draw_column.call(null, ctx, n, cljs.core.nth.call(null, values, n), marker_size, marker_size, gui.stride, height, sla);
-      var G__3010 = cljs.core.next.call(null, G__3009);
-      G__3009 = G__3010;
+      var G__9302 = cljs.core.next.call(null, G__9301);
+      G__9301 = G__9302;
       continue
     }else {
       return null
@@ -23250,9 +23239,9 @@ gui.event_coords = function event_coords(event) {
   }
 };
 gui.mouse_click = function mouse_click(event) {
-  var vec__3012 = gui.event_coords.call(null, event);
-  var mouse_x = cljs.core.nth.call(null, vec__3012, 0, null);
-  var mouse_y = cljs.core.nth.call(null, vec__3012, 1, null);
+  var vec__9304 = gui.event_coords.call(null, event);
+  var mouse_x = cljs.core.nth.call(null, vec__9304, 0, null);
+  var mouse_y = cljs.core.nth.call(null, vec__9304, 1, null);
   var height = gui.get_canvas.call(null).height;
   var period = cljs.core.int$.call(null, mouse_x / gui.stride) - 1;
   var x = gui.stride * period;
