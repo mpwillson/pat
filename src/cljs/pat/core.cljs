@@ -16,9 +16,10 @@
   (str "<p>Your browser environment prohibits cookies; parameters cannot "
        "be preserved between visits.</p>"))
 
+;; param values are strings to match cookie storage
 (def param-keys [:nperiods :nreferrals :ncurrbreach :nslots :sla :navslots 
-                 :slots])
-(def param-defaults ["52" "22" "0" "30" "10" "22" "[[0 22]]"])
+                 :slots :normaldist])
+(def param-defaults ["52" "22" "0" "30" "10" "22" "[[0 22]]" "false"])
 
 (defn set-cookies
   [param-map]
@@ -58,7 +59,7 @@
   (reduce + (for [p lst] (count (filter neg? p)))))
 
 (defn get-params [keys]
-  (reduce #(assoc %1 %2 (gui/get-int %2)) {} keys))
+  (reduce #(assoc %1 %2 (gui/get-value %2)) {} keys))
 
 (defn start []
   (try
@@ -73,7 +74,7 @@
                      (:nreferrals p)) (constantly (:nreferrals p)))
             q (simul/mkqueue)]
         (gui/clear)
-        (set-cookies (assoc p :slots @gui/slot-vec))
+        (set-cookies (assoc p :slots @gui/slot-vec :normaldist ndist))
             #_(zipmap param-keys 
                       (map str [nperiods nreferrals ncurr-breaching 
                                 nslots sla navslots @gui/slot-vec]))
@@ -97,25 +98,28 @@
 
 (defn set-slots
   [initialise]
-  (when initialise (gui/init-slots [[0 (gui/get-int :navslots)]]))
+  (when initialise (gui/init-slots [[0 (gui/get-value :navslots)]]))
   (let [period-slots (simul/gen-periods [] @gui/slot-vec)
-        nperiods (gui/get-int :nperiods)
+        nperiods (gui/get-value :nperiods)
         slot-data (take nperiods (map #(repeat % -1) period-slots))]
     (gui/draw-graph slot-data)))
 
+(defn import-file [text]
+  (js/alert text))
 
 (defn setup []
-  (let [param-map  (zipmap param-keys param-defaults)]
-    (gui/set-value :version (str "Version " version))
-    (when (.isEmpty goog.net.cookies)
-      (set-cookies param-map))
-    (let [cookies (get-cookies)
-          params (or (not-empty cookies) param-map)]
-      (doseq [[k v] params]
-          (gui/set-value k v))
-      (gui/init-slots (reader/read-string (:slots params)))
-      (when (empty? cookies)
-        (.insertAdjacentHTML (.-body js/document) "beforeEnd" no-cookies)))
-    (if (gui/canvas-available)
-      (gui/set-mouse-refresh set-slots)
-      (.write js/document unsupported))))
+  (if (not (gui/canvas-available))
+    (.write js/document unsupported)
+    (let [param-map  (zipmap param-keys param-defaults)]
+      (gui/set-value :version (str "Version " version))
+      (when (.isEmpty goog.net.cookies)
+        (set-cookies param-map))
+      (let [cookies (get-cookies)
+            params (or (not-empty cookies) param-map)]
+        (when (empty? cookies)
+          (.insertAdjacentHTML (.-body js/document) "beforeEnd" no-cookies))
+        (doseq [[k v] params] (gui/set-value k v))
+        (gui/init-slots (reader/read-string (:slots params)))
+        (gui/set-checked :normal (reader/read-string (:normaldist params)))
+        (gui/set-file-listener import-file)
+        (gui/set-mouse-refresh set-slots)))))
