@@ -58,7 +58,9 @@
   [lst]
   (reduce + (for [p lst] (count (filter neg? p)))))
 
-(defn get-params [keys]
+(defn get-params 
+  "Return map of param keys and values from current gui settings."
+  [keys]
   (reduce #(assoc %1 %2 (gui/get-value %2)) {} keys))
 
 (defn start []
@@ -70,14 +72,11 @@
                      0 
                      (+ (* (:sla p) (:nreferrals p)) (:ncurrbreach p)))
             arfn (if ndist 
-                   #(simul/grand 
-                     (:nreferrals p)) (constantly (:nreferrals p)))
+                   #(simul/grand (:nreferrals p)) 
+                   (constantly (:nreferrals p)))
             q (simul/mkqueue)]
         (gui/clear)
         (set-cookies (assoc p :slots @gui/slot-vec :normaldist ndist))
-            #_(zipmap param-keys 
-                      (map str [nperiods nreferrals ncurr-breaching 
-                                nslots sla navslots @gui/slot-vec]))
         ;; add queued requests (always assume uniform arrival rate)
         (doseq [[p n] (find-span qtotal (constantly (:nreferrals p)) 1 [])]
           (simul/add-requests q p n))
