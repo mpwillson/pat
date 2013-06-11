@@ -1,9 +1,11 @@
-(ns gui)
+(ns gui
+  (:require [cljs.reader :as reader]))
 
 (def graph-data (atom nil))
 (def widget-map (atom {}))
 (def refresh-fn (atom nil))
 (def slot-vec (atom nil))
+(def file-read-fn (atom nil))
 
 (def stride 20)
 
@@ -17,26 +19,23 @@
 (defn init-slots [value]
   (reset! slot-vec value))
 
-(defn get-value [field]
-  (.-value (.getElementById js/document (name field))))
+(defn get-element [id]
+  (.getElementById js/document (name id)))
 
-(defn set-value [field value]
-  (set! (.-value (.getElementById js/document (name field))) value))
+(defn get-value [id]
+  (reader/read-string (.-value (get-element id))))
 
-(defn get-checked [field]
-  (.-checked (.getElementById js/document (name field))))
+(defn set-value [id value]
+  (set! (.-value (get-element id)) value))
 
-(defn get-canvas []
-  (.getElementById js/document "patCanvas"))
+(defn get-checked [id]
+  (.-checked (get-element id)))
 
-(defn get-context []
-  (.getContext (get-canvas) "2d"))
+(defn set-checked [id value]
+  (set! (.-checked (get-element id)) value))
 
-(defn get-int [field]
-  (try
-    (js/parseInt (get-value field))
-    (catch js/Error _
-      0)))
+(defn get-context [canvas]
+  (.getContext canvas "2d"))
 
 (defn colour-map
   [v sla]
@@ -92,22 +91,23 @@
     (.fillText ctx "+" x y)))
 
 (defn clear []
-  (let [canvas (get-canvas)
+  (let [canvas (get-element :patCanvas)
         width (.-width canvas)
         height (.-height canvas)
-        ctx (get-context)]
+        ctx (get-context canvas)]
     (.clearRect ctx 0 0 width height)))
 
 (defn draw-graph [values]
   (clear)
-  (let [nslots (get-int :nslots)
+  (let [canvas (get-element :patCanvas)
+        ctx (get-context canvas)
+        nslots (get-value :nslots)
         height (* (+ nslots 2) stride)
-        sla (get-int :sla)
-        nperiods (get-int :nperiods)
-        ctx (get-context)
+        sla (get-value :sla)
+        nperiods (get-value :nperiods)
         marker-size (int (/ stride 2))]
-    (set! (.-height (get-canvas)) height)
-    (set! (.-width (get-canvas)) (* (+ nperiods 2) stride))
+    (set! (.-height canvas) height)
+    (set! (.-width canvas) (* (+ nperiods 2) stride))
     (draw-axes ctx height nslots nperiods stride)
     (doseq [n (range nperiods)]
       (draw-column ctx n (nth values n) marker-size marker-size
@@ -125,19 +125,30 @@
 (defn mouse-click 
   [event]
   (let [[mouse-x  mouse-y] (event-coords event)
-        height (.-height (get-canvas))
+        height (.-height (get-element :patCanvas))
         period (dec (int (/ mouse-x stride)))
         x (* stride period)
         slots (dec (int (/ (- height mouse-y) stride)))
         y (* stride (int (/ mouse-y stride)))]
     (handle-slots [period slots])
-    (when @refresh-fn (@refresh-fn))
-    #_(set-value :status
-               (format "Period: %d set with %d slots" period slots))))
+    (when @refresh-fn (@refresh-fn))))
 
 (defn set-mouse-refresh [fn]
   (reset! refresh-fn fn))
 
-(defn get-file []
-  (let [filer (.getElementById js/document "filer")]))
-        
+(defn handle-file-contents [text]
+  (when @file-read-fn (@file-read-fn text)))
+
+(defn read-file [evt]
+  (let [f (aget (.-files (.-target evt)) 0)]
+    (if f
+      (let [r (js/FileReader.)]
+        (set! (.-onload r) 
+              (fn [e] (handle-file-contents (.-result (.-target e)))))
+        (.readAsText r f))
+      (js/alert "Unable to read file"))))
+
+(defn set-file-listener [callback]
+  (reset! file-read-fn callback)
+  (let [filer (get-element :filer)]
+    (.addEventListener filer "change" read-file false)))
