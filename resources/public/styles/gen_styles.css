@@ -1,0 +1,28 @@
+table, p, li {font-family: sans-serif; font-size: 10pt}
+pre {font-family: monospace; font-size: 9pt;  background-color: #e0e0e0}
+h1 {color: #999e6a; background-color: white; font-size: 14pt}
+h2 {font-size: 12pt; font-weight: bold}
+h3 {font-size: 12pt; font-style: italic}
+.navbar a {
+    text-decoration: none; 
+    font-family: sans-serif;
+    font-size: 10pt;
+    font-weight: normal; 
+    color: white;
+}
+.navbar a:hover {
+    color: black;
+    background: white;
+}
+
+th.title {color: #979e6a; font-size: 14pt; font-weight: bold; text-align: left}
+th.params {background-color: #ffe800; font-weight: bold;}
+th.results {background-color: #14a2d4; color: white; font-weight: bold;}
+th.controls {background-color: #af5eac; color: white; font-weight: bold;}
+
+td.title {color: #979e6a; font-size: 14pt; font-weight: bold; text-align: left}
+td.params {background-color: #ffe800; text-align: left}
+td.results {background-color: #14a2d4; color: white; text-align: left}
+td.controls {background-color: #af5eac; color: white;}
+
+
