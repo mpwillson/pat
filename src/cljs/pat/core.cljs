@@ -16,6 +16,7 @@
   (str "<p>Your browser environment prohibits cookies; parameters cannot "
        "be preserved between visits.</p>"))
 
+;; param keys are used as ids for html elements
 ;; param values are strings to match cookie storage
 (def param-keys [:nperiods :nreferrals :ncurrbreach :nslots :sla :navslots 
                  :slots :normaldist])
