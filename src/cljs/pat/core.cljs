@@ -1,10 +1,12 @@
 (ns pat
   (:require [goog.net.cookies :as cks]
-            [cljs.reader :as reader])
+            [cljs.reader :as reader]
+            [gui] [simul])
   (:use [clojure.string :only [split]]))
 
 (def prog-name "Patient Waiting Time Simulator")
 (def version "0.2")
+
 (def title (str prog-name " " version))
 
 (def unsupported 
@@ -89,7 +91,7 @@
               unusedslots (get-empty-count result)]
           (gui/draw-graph result)
           (doseq [[k v] {:nbreached (str nbreached) 
-                         :avqtime (format "%.1f" avq)
+                         :avqtime (.toFixed avq 1)
                          :unusedslots (str unusedslots)}]
             (gui/set-value k v))))
       (catch js/Error _

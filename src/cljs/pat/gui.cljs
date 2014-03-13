@@ -1,5 +1,7 @@
 (ns gui
-  (:require [cljs.reader :as reader]))
+  (:require [cljs.reader :as reader]
+            [goog.string :as gstring] ; both this and next line required for
+            [goog.string.format]))    ; goog.string.format
 
 (def graph-data (atom nil))
 (def widget-map (atom {}))
@@ -11,6 +13,12 @@
 
 ;;             green     red       blue
 (def colorvec ["#88FF88" "#FF8888" "#6666FF"])
+
+
+(defn format 
+  "Emulate clojure format via goog.string.format."
+  [fmt & args]
+  (apply gstring/format fmt args))
 
 (defn canvas-available 
   []
@@ -82,7 +90,7 @@
   (doseq [n (range nperiods)]
     (.fillText ctx (str n) (* (inc n) stride) (- h stride 2)))
   (doall (map
-         #(.fillText ctx (format "%2d" %2) 1 %1)
+         #(.fillText ctx (format "%02d" %2) 1 %1)
          (range (- h (* 2 stride)) 0 (- stride))
          (range 1 (inc nslots))))
   ;; draw markers
@@ -101,10 +109,10 @@
   (clear)
   (let [canvas (get-element :patCanvas)
         ctx (get-context canvas)
-        nslots (get-value :nslots)
+        nslots (js/parseInt (get-value :nslots))
         height (* (+ nslots 2) stride)
         sla (get-value :sla)
-        nperiods (get-value :nperiods)
+        nperiods (js/parseInt (get-value :nperiods))
         marker-size (int (/ stride 2))]
     (set! (.-height canvas) height)
     (set! (.-width canvas) (* (+ nperiods 2) stride))

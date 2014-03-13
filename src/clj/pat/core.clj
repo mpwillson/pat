@@ -1,3 +1,4 @@
+
 ;;;; Patient Waiting Time Simulator
 ;;
 ;;  :reload is required otherwise gui goes bad on repeated executions
