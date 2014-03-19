@@ -1,6 +1,6 @@
 (defproject pat "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Patient Waiting Time Simulator"
+  :url "http://www.mwconsultancy.com/pat"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[lein-cljsbuild "1.0.2"]]
