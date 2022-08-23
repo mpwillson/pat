@@ -1,6 +1,6 @@
 (defproject pat "0.1.0-SNAPSHOT"
   :description "Patient Waiting Time Simulator"
-  :url "http://www.mwconsultancy.com/pat"
+  :url ""
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[lein-cljsbuild "1.0.2"]]
